@@ -1,12 +1,15 @@
 <?php
 
-class DateTimeView {
+namespace view;
 
+class DateTimeView {
+	private $timeString;
+
+	public function __construct($timeString) {
+		$this->timeString = $timeString;
+	}
 
 	public function show() {
-
-		$timeString = 'TODO, Write servertime here...';
-
-		return '<p>' . $timeString . '</p>';
+		return '<p>' . $this->timeString . '</p>';
 	}
 }
