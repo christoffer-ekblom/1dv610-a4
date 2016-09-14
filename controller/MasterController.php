@@ -15,6 +15,6 @@ class MasterController {
     	$dateTimeView = new \view\DateTimeView($dateTime->getdate());
     	$layoutview = new \view\LayoutView();
 
-    	$layoutView->render($login->isLoggedIn(), $loginView, $dateTimeView);
+    	$layoutView->render($login->isLoggedIn(), $login->response(), $loginView, $dateTimeView);
     }
 }
