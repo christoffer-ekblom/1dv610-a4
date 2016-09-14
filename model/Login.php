@@ -22,6 +22,9 @@ class Login {
 		if($this->loginButtonIsPressed() && $this->usernameIsMissing() && $this->passwordIsMissing()) {
 			return "Username is missing";
 		}
+		if($this->loginButtonIsPressed() && !$this->usernameIsMissing && $this->passwordIsMissing()) {
+			return "Password is missing";
+		}
 	}
 
 	private function loginButtonIsPressed() {
