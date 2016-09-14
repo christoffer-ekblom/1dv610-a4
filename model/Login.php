@@ -32,7 +32,10 @@ class Login {
 		if($this->loginButtonIsPressed() && $this->usernameIsMissing() && !$this->passwordIsMissing()) {
 			return "Username is missing";
 		}
-		if($this->usernameExists() && !$this->correspondUserNamePassword()) {
+		if($this->loginButtonIsPressed() && $this->usernameExists() && !$this->correspondUserNamePassword()) {
+			return "Wrong name or password";
+		}
+		if($this->loginButtonIsPressed() && !$this->usernameExists()) {
 			return "Wrong name or password";
 		}
 	}
