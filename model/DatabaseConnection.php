@@ -19,4 +19,15 @@ class DatabaseConnection {
 
 		return $members;
 	}
+
+	public function correspondUsernamePassword($username, $password) {
+		$result = mysql_query("SELECT password FROM members WHERE username LIKE '$username'");
+
+		while($row = mysql_fetch_array($result)) {
+			if($password == $row[0]) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
