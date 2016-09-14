@@ -7,8 +7,12 @@ class Login {
 	private $username;
 	private $password;
 	private $loginButton;
+	private $dbConnection;
 
 	public function __construct() {
+		$this->dbConnection = new DatabaseConnection();
+		$this->dbConnection->connect();
+
 		$this->username = $_POST['LoginView::UserName'];
 		$this->password = $_POST['LoginView::Password'];
 		$this->loginButton = $_POST['LoginView::Login'];
@@ -28,6 +32,13 @@ class Login {
 		if($this->loginButtonIsPressed() && $this->usernameIsMissing() && !$this->passwordIsMissing()) {
 			return "Username is missing";
 		}
+		if($this->usernameExists()) {
+			return "Wrong name or password";
+		}
+	}
+
+	private function getUsers() {
+		return $this->dbConnection->getAllRegisteredUsers();
 	}
 
 	private function loginButtonIsPressed() {
@@ -42,6 +53,10 @@ class Login {
 			return true;
 		}
 		return false;
+	}
+
+	private function usernameExists() {
+		return in_array($this->username, $this->getUsers());
 	}
 
 	private function usernameIsMissing() {
