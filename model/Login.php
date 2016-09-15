@@ -3,7 +3,6 @@
 namespace model;
 
 class Login {
-	private $isLoggedIn = false;
 	private $username;
 	private $password;
 	private $loginButton;
@@ -16,10 +15,6 @@ class Login {
 		$this->username = $_POST['LoginView::UserName'];
 		$this->password = $_POST['LoginView::Password'];
 		$this->loginButton = $_POST['LoginView::Login'];
-	}
-
-	public function isLoggedIn() {
-		return $this->isLoggedIn;
 	}
 
 	public function response() {
@@ -38,7 +33,12 @@ class Login {
 		if($this->loginButtonIsPressed() && !$this->usernameExists()) {
 			return "Wrong name or password";
 		}
+		if($this->loginButtonIsPressed() && $this->correspondUserNamePassword()) {
+			$_SESSION['isLoggedIn'] = true;
+			return "Welcome";
+		}
 	}
+	
 	private function correspondUserNamePassword() {
 		return $this->dbConnection->correspondUsernamePassword($this->username, $this->password);
 	}
