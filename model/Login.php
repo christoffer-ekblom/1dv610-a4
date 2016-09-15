@@ -39,9 +39,12 @@ class Login {
 			$_SESSION['isLoggedIn'] = true;
 			return "Welcome";
 		}
-		if($this->logOutButtonIsPressed() && $_SESSION['isLoggedIn'] = true) {
+		if($this->logOutButtonIsPressed() && $_SESSION['isLoggedIn'] == true) {
 			$_SESSION['isLoggedIn'] = false;
 			return "Bye bye!";
+		}
+		if($this->logOutButtonIsPressed() && $_SESSION['isLoggedIn'] == false) {
+			return null;
 		}
 	}
 
