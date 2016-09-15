@@ -45,7 +45,8 @@ class Login {
 		if($this->loginButtonIsPressed() && $this->correspondUserNamePassword() && $this->keepMeLoggedInIsChecked()) {
 			$_SESSION['isLoggedIn'] = true;
 			setcookie("CookieName", $this->username, $this->cookieTime());
-			setcookie("CookiePassword", uniqid(), $this->cookieTime());
+			setcookie("CookiePassword", $this->randomString(), $this->cookieTime());
+			$this->dbConnection->setCookieIdToMember($this->username);
 			return "Welcome and you will be remembered";
 		}
 	}
@@ -58,7 +59,7 @@ class Login {
 	private function correspondUserNamePassword() {
 		return $this->dbConnection->correspondUsernamePassword($this->username, $this->password);
 	}
-	
+
 	private function getUsers() {
 		return $this->dbConnection->getAllRegisteredUsers();
 	}
@@ -82,6 +83,12 @@ class Login {
 			return true;
 		}
 		return false;
+	}
+
+	private function randomString() {
+		$salt1 = ")y%b[GH8;??AtN8ttkhi6vM9UugVKQ78JCgp2b6g?A?7o/$W6D";
+		$salt2 = "KpGuNxZGF[Uh2qj423(2N=9;CEoK4]w}E@xgs.8TUfpp3Z%[L2";
+		return crypt($salt1 . uniqid() . $salt2);
 	}
 
 	private function keepMeLoggedInIsChecked() {
