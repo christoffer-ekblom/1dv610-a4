@@ -6,6 +6,7 @@ class Login {
 	private $username;
 	private $password;
 	private $loginButton;
+	private $logoutButton;
 	private $dbConnection;
 
 	public function __construct() {
@@ -15,6 +16,7 @@ class Login {
 		$this->username = $_POST['LoginView::UserName'];
 		$this->password = $_POST['LoginView::Password'];
 		$this->loginButton = $_POST['LoginView::Login'];
+		$this->logoutButton = $_POST['LoginView::Logout'];
 	}
 
 	public function response() {
@@ -37,8 +39,12 @@ class Login {
 			$_SESSION['isLoggedIn'] = true;
 			return "Welcome";
 		}
+		if($this->logOutButtonIsPressed() && $_SESSION['isLoggedIn'] = true) {
+			$_SESSION['isLoggedIn'] = false;
+			return "Bye bye!";
+		}
 	}
-	
+
 	private function correspondUserNamePassword() {
 		return $this->dbConnection->correspondUsernamePassword($this->username, $this->password);
 	}
@@ -49,6 +55,13 @@ class Login {
 
 	private function loginButtonIsPressed() {
 		if($this->loginButton != null) {
+			return true;
+		}
+		return false;
+	}
+
+	private function logoutButtonIsPressed() {
+		if($this->logoutButton != null) {
 			return true;
 		}
 		return false;
