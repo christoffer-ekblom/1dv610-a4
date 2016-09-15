@@ -45,24 +45,20 @@ class Login {
 		if($this->loginButtonIsPressed() && $this->correspondUserNamePassword() && $this->keepMeLoggedInIsChecked()) {
 			$_SESSION['isLoggedIn'] = true;
 			setcookie("CookieName", $this->username, $this->cookieTime());
-			setcookie("CookiePassword", $this->hashedPassword(), $this->cookieTime());
+			setcookie("CookiePassword", uniqid(), $this->cookieTime());
 			return "Welcome and you will be remembered";
 		}
 	}
 
 	private function cookieTime() {
-		return time()+(60*60*24*30);
+		$thirtyDaysInSeconds = 2592000;
+		return time()+($thirtyDaysInSeconds);
 	}
 
 	private function correspondUserNamePassword() {
 		return $this->dbConnection->correspondUsernamePassword($this->username, $this->password);
 	}
-
-	private function hashedPassword() {
-		$options = ['cost' => 12,];
-		return password_hash($this->password, PASSWORD_BCRYPT, $options);
-	}
-
+	
 	private function getUsers() {
 		return $this->dbConnection->getAllRegisteredUsers();
 	}
