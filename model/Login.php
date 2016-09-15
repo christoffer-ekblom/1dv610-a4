@@ -7,6 +7,7 @@ class Login {
 	private $password;
 	private $loginButton;
 	private $logoutButton;
+	private $keepMeLoggedInIsCheckbox;
 	private $dbConnection;
 
 	public function __construct() {
@@ -17,6 +18,7 @@ class Login {
 		$this->password = $_POST['LoginView::Password'];
 		$this->loginButton = $_POST['LoginView::Login'];
 		$this->logoutButton = $_POST['LoginView::Logout'];
+		$this->keepMeLoggedInIsCheckbox = $_POST['LoginView::KeepMeLoggedIn'];
 	}
 
 	public function response() {
@@ -35,7 +37,7 @@ class Login {
 		if($this->loginButtonIsPressed() && !$this->usernameExists()) {
 			return "Wrong name or password";
 		}
-		if($this->loginButtonIsPressed() && $this->correspondUserNamePassword()) {
+		if($this->loginButtonIsPressed() && $this->correspondUserNamePassword() && !$this->keepMeLoggedInIsChecked()) {
 			$_SESSION['isLoggedIn'] = true;
 			return "Welcome";
 		}
@@ -46,10 +48,21 @@ class Login {
 		if($this->logOutButtonIsPressed() && $_SESSION['isLoggedIn'] == false) {
 			return null;
 		}
+		if($this->loginButtonIsPressed() && $this->correspondUserNamePassword() && $this->keepMeLoggedInIsChecked()) {
+			$_SESSION['isLoggedIn'] = true;
+			setcookie("CookieName", $this->username);
+			setcookie("CookiePassword", $this->hashedPassword());
+			return "Welcome and you will be remembered";
+		}
 	}
 
 	private function correspondUserNamePassword() {
 		return $this->dbConnection->correspondUsernamePassword($this->username, $this->password);
+	}
+
+	private function hashedPassword() {
+		$options = ['cost' => 12,];
+		return password_hash($this->password, PASSWORD_BCRYPT, $options);
 	}
 
 	private function getUsers() {
@@ -72,6 +85,13 @@ class Login {
 
 	private function passwordIsMissing() {
 		if($this->password == null) {
+			return true;
+		}
+		return false;
+	}
+
+	private function keepMeLoggedInIsChecked() {
+		if($this->keepMeLoggedInIsCheckbox != null) {
 			return true;
 		}
 		return false;
