@@ -30,4 +30,9 @@ class DatabaseConnection {
 		}
 		return false;
 	}
+
+	public function setCookieIdToMember($username) {
+		$sql = "UPDATE members SET cookie='" . $_COOKIE["CookiePassword"] . "' WHERE username='" . $username . "'";
+		$result = mysql_query($sql);
+	}
 }
