@@ -22,19 +22,13 @@ class Login {
 	}
 
 	public function response() {
-		if($this->loginButtonIsPressed() && $this->usernameIsMissing() && $this->passwordIsMissing()) {
+		if($this->loginButtonIsPressed() && $this->usernameIsMissing()) {
 			return "Username is missing";
 		}
 		if($this->loginButtonIsPressed() && !$this->usernameIsMissing() && $this->passwordIsMissing()) {
 			return "Password is missing";
 		}
-		if($this->loginButtonIsPressed() && $this->usernameIsMissing() && !$this->passwordIsMissing()) {
-			return "Username is missing";
-		}
-		if($this->loginButtonIsPressed() && $this->usernameExists() && !$this->correspondUserNamePassword()) {
-			return "Wrong name or password";
-		}
-		if($this->loginButtonIsPressed() && !$this->usernameExists()) {
+		if($this->loginButtonIsPressed() && !$this->correspondUserNamePassword()) {
 			return "Wrong name or password";
 		}
 		if($this->loginButtonIsPressed() && $this->correspondUserNamePassword() && !$this->keepMeLoggedInIsChecked()) {
@@ -50,10 +44,14 @@ class Login {
 		}
 		if($this->loginButtonIsPressed() && $this->correspondUserNamePassword() && $this->keepMeLoggedInIsChecked()) {
 			$_SESSION['isLoggedIn'] = true;
-			setcookie("CookieName", $this->username);
-			setcookie("CookiePassword", $this->hashedPassword());
+			setcookie("CookieName", $this->username, $this->cookieTime());
+			setcookie("CookiePassword", $this->hashedPassword(), $this->cookieTime());
 			return "Welcome and you will be remembered";
 		}
+	}
+
+	private function cookieTime() {
+		return time()+(60*60*24*30);
 	}
 
 	private function correspondUserNamePassword() {
@@ -97,8 +95,8 @@ class Login {
 		return false;
 	}
 
-	private function usernameExists() {
-		return in_array($this->username, $this->getUsers());
+	private function usernameExists($username) {
+		return in_array($username, $this->getUsers());
 	}
 
 	private function usernameIsMissing() {
