@@ -21,6 +21,17 @@ class DatabaseConnection {
 		return $members;
 	}
 
+	public function correspondCookieUsernamePassword($cookieName, $cookiePassword) {
+		$sql = "SELECT cookie FROM members WHERE BINARY username='" . $cookieName . "'";
+		$result = $this->connection->query($sql);
+		$password = $result->fetch_array();
+
+		if($password[0] === $cookiePassword) {
+			return true;
+		}
+		return false;
+	}
+
 	public function correspondUsernamePassword($username, $password) {
 		$sql = "SELECT password FROM members WHERE BINARY username='" . $username . "'";
 		$result = $this->connection->query($sql);
@@ -32,8 +43,9 @@ class DatabaseConnection {
 		return false;
 	}
 
-	public function setCookieIdToMember($username) {
-		$sql = "UPDATE members SET cookie='" . $_COOKIE["CookiePassword"] . "' WHERE username='" . $username . "'";
+	public function setCookieIdToMember($username, $cookiePassword) {
+		$_COOKIE['cookiePassword'] = $cookiePassword;
+		$sql = "UPDATE members SET cookie='" . $cookiePassword . "' WHERE username='" . $username . "'";
 		$this->connection->query($sql);
 	}
 }

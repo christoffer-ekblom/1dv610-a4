@@ -38,6 +38,10 @@ class Login {
 		if($this->logInButtonIsPressed() && $_SESSION['isLoggedIn'] == true) {
 			return null;
 		}
+		if($this->logOutButtonIsPressed()) {
+			unset($_COOKIE['CookieName']);
+			unset($_COOKIE['CookiePassword']);
+		}
 		if($this->logOutButtonIsPressed() && $_SESSION['isLoggedIn'] == true) {
 			$_SESSION['isLoggedIn'] = false;
 			return "Bye bye!";
@@ -47,10 +51,21 @@ class Login {
 		}
 		if($this->loginButtonIsPressed() && $this->correspondUserNamePassword() && $this->keepMeLoggedInIsChecked()) {
 			$_SESSION['isLoggedIn'] = true;
-			setcookie("CookieName", $this->username, $this->cookieTime());
-			setcookie("CookiePassword", $this->randomString(), $this->cookieTime());
-			$this->dbConnection->setCookieIdToMember($this->username);
+
+			if($_COOKIE["CookieName"] == null || $_COOKIE['CookiePassword'] == null)  {
+				$cookiePassword = $this->randomString();
+				setcookie("CookieName", $this->username, $this->cookieTime());
+				setcookie("CookiePassword", $cookiePassword, $this->cookieTime());
+				$this->dbConnection->setCookieIdToMember($this->username, $cookiePassword);
+			}
 			return "Welcome and you will be remembered";
+		}
+		if($_COOKIE['CookieName'] !== null && $_COOKIE['CookiePassword'] !== null && $this->dbConnection->correspondCookieUsernamePassword($_COOKIE['CookieName'], $_COOKIE['CookiePassword'])) {
+			if($_SESSION['isLoggedIn']) {
+				return null;
+			}
+			$_SESSION['isLoggedIn'] = true;
+			return "Welcome back with cookie";
 		}
 	}
 
