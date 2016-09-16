@@ -31,9 +31,12 @@ class Login {
 		if($this->loginButtonIsPressed() && !$this->correspondUserNamePassword()) {
 			return "Wrong name or password";
 		}
-		if($this->loginButtonIsPressed() && $this->correspondUserNamePassword() && !$this->keepMeLoggedInIsChecked()) {
+		if($this->loginButtonIsPressed() && $this->correspondUserNamePassword() && !$this->keepMeLoggedInIsChecked() && $_SESSION['isLoggedIn'] == false) {
 			$_SESSION['isLoggedIn'] = true;
 			return "Welcome";
+		}
+		if($this->logInButtonIsPressed() && $_SESSION['isLoggedIn'] == true) {
+			return null;
 		}
 		if($this->logOutButtonIsPressed() && $_SESSION['isLoggedIn'] == true) {
 			$_SESSION['isLoggedIn'] = false;
