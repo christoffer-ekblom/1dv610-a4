@@ -13,4 +13,4 @@ Christoffer Ekblom
 - TODO checklist https://trello.com/c/pkYS5UwL
 - Slack channel https://coursepress.slack.com/messages/1dv610
 - Automated tests Application http://csquiz.lnu.se:82
-- Public web server http://fyma.se/idv610-a2
+- Public web server http://fyma.se/1dv610-a2/index.php
