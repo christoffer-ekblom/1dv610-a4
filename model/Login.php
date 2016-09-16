@@ -65,7 +65,7 @@ class Login {
 	}
 
 	private function loginButtonIsPressed() {
-		if($this->loginButton != null) {
+		if($this->loginButton !== null) {
 			return true;
 		}
 		return false;
