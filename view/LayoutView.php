@@ -3,8 +3,17 @@
 namespace view;
 
 class LayoutView {
-  
-  public function render($isLoggedIn, $message, LoginView $v, DateTimeView $dtv) {
+  private $isLoggedIn;
+  private $message;
+  private $loginView;
+  private $dateTimeView;
+
+  public function render($isLoggedIn, $message, LoginView $v, DateTimeView $dtv, RegisterView $rv) {
+    $this->isLoggedIn = $isLoggedIn;
+    $this->message = $message;
+    $this->loginView = $v;
+    $this->dateTimeView = $dtv;
+
     echo '<!DOCTYPE html>
       <html>
         <head>
@@ -12,13 +21,23 @@ class LayoutView {
           <title>Login Example</title>
         </head>
         <body>
-          <h1>Assignment 2</h1>
-          ' . $this->renderIsLoggedIn($isLoggedIn) . '
-          
-          <div class="container">
-              ' . $v->response($message) . '
-              
-              ' . $dtv->show() . '
+          <h1>Assignment 2</h1>';
+
+    if(isset($_GET['register'])) {
+      echo $rv->generateRegisterForm();
+    }
+    else {
+      echo '<a href="?register">Register a new user</a>
+          ' . $this->renderIsLoggedIn($this->isLoggedIn);
+    }
+
+    echo '<div class="container">';
+
+    if(!isset($_GET['register'])) {
+      echo $this->loginView->response($this->message);
+    }
+
+    echo $this->dateTimeView->show() . '
           </div>
          </body>
       </html>

@@ -13,10 +13,11 @@ class MasterController {
     	$loginView = new \view\LoginView();
     	$dateTimeView = new \view\DateTimeView($dateTime->getdate());
     	$layoutview = new \view\LayoutView();
+        $registerview = new \view\RegisterView();
 
 		$response = $login->response();
 		$isLoggedIn = $_SESSION['isLoggedIn'];
 
-    	$layoutView->render($isLoggedIn, $response, $loginView, $dateTimeView);
+    	$layoutView->render($isLoggedIn, $response, $loginView, $dateTimeView, $registerview);
     }
 }
