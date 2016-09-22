@@ -24,7 +24,7 @@ class LayoutView {
           <h1>Assignment 2</h1>';
 
     if(isset($_GET['register'])) {
-      echo $rv->generateRegisterForm();
+      echo $rv->response();
     }
     else {
       echo '<a href="?register">Register a new user</a>
