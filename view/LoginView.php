@@ -21,7 +21,13 @@ class LoginView {
 	 *
 	 * @return  void BUT writes to standard output and cookies!
 	 */
-	public function response($message) {		
+	public function response($message) {
+		if(filter_input(INPUT_COOKIE, self::$cookiePassword) != null) {
+			$_SESSION = array();
+			session_destroy();
+			$message = "Wrong information in cookies";
+		}
+
 		if($_SESSION['isLoggedIn'] == true) {
 			$response = $this->generateLogoutButtonHTML($message);
 		}
