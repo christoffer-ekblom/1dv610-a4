@@ -1,23 +1,124 @@
 <?php
 
-namespace controller;
+namespace Controller;
 
-require_once('view/View.php');
-require_once('model/Model.php');
+// Require Model members
+require_once('Model/User/Credentials.php');
+require_once('Model/User/LogInSystem.php');
+
+// Require View members
+require_once('View/ResponseMessage.php');
+require_once('View/LayoutView.php');
+require_once('View/LoginView.php');
+require_once('View/DateTimeView.php');
+require_once('View/RegisterView.php');
+
+use Model\User\Credentials as Credentials;
+use Model\User\LogInSystem as LogInSystem;
+use Model\User\Register as Register;
+
+use View\ResponseMessage as ResponseMessage;
+use View\LayoutView as LayoutView;
+use View\LoginView as LoginView;
+use View\DateTimeView as DateTimeView;
+use View\RegisterView as RegisterView;
 
 class MasterController {
-    public function init() {
-    	$login = new \model\Login();
-		$dateTime = new\model\DateTime();
-		$layoutView = new \view\LayoutView();
-    	$loginView = new \view\LoginView();
-    	$dateTimeView = new \view\DateTimeView($dateTime->getdate());
-    	$layoutview = new \view\LayoutView();
-        $registerview = new \view\RegisterView();
+	private $logInSystem;
+	private $credentials;
+	private $cookiesExists;
+	
+	private $layoutView;
+	private $logInView;
+	private $dateTimeView;
+	private $registerView;
 
-		$response = $login->response();
-		$isLoggedIn = $_SESSION['isLoggedIn'];
+	private $username;
+	private $password;
 
-    	$layoutView->render($isLoggedIn, $response, $loginView, $dateTimeView, $registerview);
-    }
+	public function __construct() {
+		$this->logInSystem = new LogInSystem();
+		$this->cookiesExists = isset($_COOKIE['LoginView::CookieName']) && isset($_COOKIE['LoginView::CookiePassword']);
+		
+		$this->layoutView = new LayoutView();
+		$this->logInView = new LoginView();
+		$this->dateTimeView = new DateTimeView();
+		$this->registerView = new RegisterView();
+
+		$this->username = $this->logInView->getRequestUserName();
+		$this->password = $this->logInView->getRequestPassword();
+	}
+
+	public function run() {
+		$userWantsToLogin = $this->logInView->getRequestLogin() !== null;
+		$userWantsToLogout = $this->logInView->getRequestLogout() !== null && $this->logInSystem->isLoggedIn();
+		$keep = $this->logInView->getRequestKeepMeLoggedIn() !== null;
+
+		if($this->cookiesExists) {
+			$this->tryToLoginWithCookie();
+		}
+
+		elseif($userWantsToLogin) {
+			$this->tryToLogin();
+		}
+
+		if($userWantsToLogout) {
+			$this->logInSystem->logout();
+			ResponseMessage::logout();
+		}
+
+		// first time login
+		elseif(!isset($_SESSION['isLoggedIn']) && $this->logInSystem->login()) {
+			if($keep) {
+				$this->logInSystem->keepLogIn($this->username);
+				ResponseMessage::keep();
+			}
+			else {
+				ResponseMessage::login();
+			}
+		}
+
+		$this->sendResponseToView();
+	}
+
+	private function tryToLogin() {
+		$credentials = new Credentials($this->username, $this->password);
+
+		try {
+			$this->logInSystem->validateCredentials($credentials);
+		}
+		catch(\LoginWithoutAnyEnteredFieldsException $e) {
+			ResponseMessage::usernameIsMissing();
+		}
+		catch(\LoginWithOnlyUsernameException $e) {
+			ResponseMessage::passwordIsMissing();
+		}
+		catch(\LoginWithOnlyPasswordException $e) {
+			ResponseMessage::usernameIsMissing();
+		}
+		catch(\WrongNameOrPasswordException $e) {
+			ResponseMessage::wrongNameOrPassword();
+		}
+	}
+
+	private function tryToLoginWithCookie() {
+		try {
+			if(!isset($_SESSION['isLoggedIn']) && $this->logInSystem->cookieLogin($this->username)) {
+				ResponseMessage::welcomeBackWithCookie();
+			}
+		}
+		catch(\Exception $e) {
+
+		}
+	}
+
+	private function sendResponseToView() {
+		$message = ResponseMessage::message();
+		$isLoggedIn = $this->logInSystem->isLoggedIn();
+		$logInView = $this->logInView;
+		$dateTimeView = $this->dateTimeView;
+
+		$this->logInView->setResponseMessage($message);
+		$this->layoutView->render($isLoggedIn, $logInView, $dateTimeView);
+	}
 }

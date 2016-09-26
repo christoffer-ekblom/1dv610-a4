@@ -1,12 +1,11 @@
 <?php
 
+error_reporting(E_ALL);
+ini_set('display_errors', 'On');
+
 session_start();
 
-if(!$_SESSION['isLoggedIn']) {
-	$_SESSION['isLoggedIn'] = false;
-}
+require_once('Controller/MasterController.php');
 
-require_once('controller/MasterController.php');
-
-$controller = new \controller\MasterController();
-$controller->init();
+$controller = new \Controller\MasterController();
+$controller->run();

@@ -1,6 +1,6 @@
 <?php
 
-namespace view;
+namespace View;
 
 class LoginView {
 	private static $login = 'LoginView::Login';
@@ -11,33 +11,19 @@ class LoginView {
 	private static $cookiePassword = 'LoginView::CookiePassword';
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
+	private $message;
 
-	
-
-	/**
-	 * Create HTTP response
-	 *
-	 * Should be called after a login attempt has been determined
-	 *
-	 * @return  void BUT writes to standard output and cookies!
-	 */
-	public function response($message) {		
-		if($_SESSION['isLoggedIn'] == true) {
-			$response = $this->generateLogoutButtonHTML($message);
+	public function response($isLoggedIn) {
+		if(!$isLoggedIn) {
+			$response = $this->generateLoginFormHTML();
 		}
-
 		else {
-			$response = $this->generateLoginFormHTML($message);
+			$response = $this->generateLogoutButtonHTML($this->message);
 		}
 
 		return $response;
 	}
 
-	/**
-	* Generate HTML code on the output buffer for the logout button
-	* @param $message, String output message
-	* @return  void, BUT writes to standard output!
-	*/
 	private function generateLogoutButtonHTML($message) {
 		return '
 			<form  method="post" >
@@ -47,20 +33,15 @@ class LoginView {
 		';
 	}
 	
-	/**
-	* Generate HTML code on the output buffer for the logout button
-	* @param $message, String output message
-	* @return  void, BUT writes to standard output!
-	*/
-	private function generateLoginFormHTML($message) {
+	private function generateLoginFormHTML() {
 		return '
 			<form method="post" > 
 				<fieldset>
 					<legend>Login - enter Username and password</legend>
-					<p id="' . self::$messageId . '">' . $message . '</p>
+					<p id="' . self::$messageId . '">' . $this->message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $_POST['LoginView::UserName'] . '" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . filter_input(INPUT_POST, self::$name) . '" />
 
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
@@ -73,10 +54,36 @@ class LoginView {
 			</form>
 		';
 	}
-	
-	//CREATE GET-FUNCTIONS TO FETCH REQUEST VARIABLES
-	private function getRequestUserName() {
-		//RETURN REQUEST VARIABLE: USERNAME
+
+	public function getRequestLogin() {
+		return filter_input(INPUT_POST, self::$login);
 	}
-	
+
+	public function getRequestLogout() {
+		return filter_input(INPUT_POST, self::$logout);
+	}
+
+	public function getRequestUserName() {
+		return filter_input(INPUT_POST, self::$name);
+	}
+
+	public function getRequestPassword() {
+		return filter_input(INPUT_POST, self::$password);
+	}
+
+	public function getRequestCookieName() {
+		return filter_input(INPUT_COOKIE, self::$cookieName);
+	}
+
+	public function getRequestCookiePassword() {
+		return filter_input(INPUT_COOKIE, self::$cookiePassword);
+	}
+
+	public function getRequestKeepMeLoggedIn() {
+		return filter_input(INPUT_POST, self::$keep);
+	}
+
+	public function setResponseMessage($message) {
+		$this->message = $message;
+	}
 }
