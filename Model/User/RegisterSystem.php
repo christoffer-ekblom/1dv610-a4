@@ -35,7 +35,7 @@ class RegisterSystem {
 		$registerWithAShortPassword = strlen($username) >= $usernameMinLength && strlen($password) < $passwordMinLength && strlen($passwordRepeat) < $passwordMinLength;
 		$registerWithADifferentPasswords = $password !== $passwordRepeat;
 		$memberAlreadyExists = $this->member->usernameExists($username);
-		$registerWithNotAllowedCharacters = !ctype_alpha($username);
+		$registerWithNotAllowedCharacters = $username != strip_tags($username);
 
 		if($registerWithoutAnyInformation) {
 			throw new \RegisterWithoutAnyInformationException();	
