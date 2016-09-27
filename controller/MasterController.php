@@ -5,6 +5,7 @@ namespace Controller;
 // Require Model members
 require_once('Model/User/Credentials.php');
 require_once('Model/User/LogInSystem.php');
+require_once('Model/User/RegisterSystem.php');
 
 // Require View members
 require_once('View/ResponseMessage.php');
@@ -15,7 +16,7 @@ require_once('View/RegisterView.php');
 
 use Model\User\Credentials as Credentials;
 use Model\User\LogInSystem as LogInSystem;
-use Model\User\Register as Register;
+use Model\User\RegisterSystem as RegisterSystem;
 
 use View\ResponseMessage as ResponseMessage;
 use View\LayoutView as LayoutView;
@@ -26,6 +27,7 @@ use View\RegisterView as RegisterView;
 class MasterController {
 	private $logInSystem;
 	private $cookiesExists;
+	private $registerSystem;
 	
 	private $layoutView;
 	private $logInView;
@@ -38,7 +40,8 @@ class MasterController {
 	public function __construct() {
 		$this->logInSystem = new LogInSystem();
 		$this->cookiesExists = isset($_COOKIE['LoginView::CookieName']) && isset($_COOKIE['LoginView::CookiePassword']);
-		
+		$this->registerSystem = new RegisterSystem();
+
 		$this->layoutView = new LayoutView();
 		$this->logInView = new LoginView();
 		$this->dateTimeView = new DateTimeView();
@@ -51,6 +54,7 @@ class MasterController {
 	public function run() {
 		$userWantsToLogin = $this->logInView->getRequestLogin() !== null;
 		$userWantsToLogout = $this->logInView->getRequestLogout() !== null && $this->logInSystem->isLoggedIn();
+		//$userWantsToRegister = $this->loginView->getRe
 		$keep = $this->logInView->getRequestKeepMeLoggedIn() !== null;
 
 		if($userWantsToLogin || $this->cookiesExists) {
@@ -85,7 +89,7 @@ class MasterController {
 					ResponseMessage::welcomeBackWithCookie();
 				}
 			}
-			catch(\LoginByManipulatedCookies $e) {
+			catch(\LoginByManipulatedCookiesException $e) {
 				ResponseMessage::LoginByManipulatedCookies();
 			}
 		}

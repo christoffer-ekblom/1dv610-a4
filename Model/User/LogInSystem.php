@@ -9,7 +9,7 @@ require_once('Exceptions/LoginWithoutAnyEnteredFieldsException.php');
 require_once('Exceptions/LoginWithOnlyUsernameException.php');
 require_once('Exceptions/LoginWithOnlyPasswordException.php');
 require_once('Exceptions/WrongNameOrPasswordException.php');
-require_once('Exceptions/LoginByManipulatedCookies.php');
+require_once('Exceptions/LoginByManipulatedCookiesException.php');
 
 class LoginSystem {
 	private $credentials;
@@ -61,7 +61,7 @@ class LoginSystem {
 				return true;
 			}
 			else {
-				throw new \LoginByManipulatedCookies();
+				throw new \LoginByManipulatedCookiesException();
 			}
 		}
 		return false;
