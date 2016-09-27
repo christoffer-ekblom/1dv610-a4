@@ -41,7 +41,15 @@ class ResponseMessage {
 		self::$message = 'Welcome back with cookie';
 	}
 
-	public static function LoginByManipulatedCookies() {
+	public static function loginByManipulatedCookies() {
 		self::$message = 'Wrong information in cookies';
+	}
+
+	public static function registerWithoutAnyInformation() {
+		self::$message = 'Username has too few characters, at least 3 characters. Password has too few characters, at least 6 characters.';
+	}
+
+	public static function registerWithEmptyPasswords() {
+		self::$message = 'Password has too few characters, at least 6 characters.';
 	}
 }

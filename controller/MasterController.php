@@ -37,6 +37,12 @@ class MasterController {
 	private $username;
 	private $password;
 
+	private $userWantsToLogin;
+	private $userWantsToLogout;
+	private $keep;
+	private $userWantsToRegister;
+	private $userWantsToShowRegisterForm;
+
 	public function __construct() {
 		$this->logInSystem = new LogInSystem();
 		$this->cookiesExists = isset($_COOKIE['LoginView::CookieName']) && isset($_COOKIE['LoginView::CookiePassword']);
@@ -52,23 +58,33 @@ class MasterController {
 	}
 
 	public function run() {
-		$userWantsToLogin = $this->logInView->getRequestLogin() !== null;
-		$userWantsToLogout = $this->logInView->getRequestLogout() !== null && $this->logInSystem->isLoggedIn();
-		//$userWantsToRegister = $this->loginView->getRe
-		$keep = $this->logInView->getRequestKeepMeLoggedIn() !== null;
+		$this->userWantsToLogin = $this->logInView->getRequestLogin() !== null;
+		$this->userWantsToLogout = $this->logInView->getRequestLogout() !== null && $this->logInSystem->isLoggedIn();
+		$this->keep = $this->logInView->getRequestKeepMeLoggedIn() !== null;
+		$this->userWantsToShowRegisterForm = isset($_GET['register']);
+		$this->userWantsToRegister = $this->registerView->getRequestRegister();
 
-		if($userWantsToLogin || $this->cookiesExists) {
+		if($this->userWantsToRegister) {
+			$this->register();
+		}
+
+		if($this->userWantsToShowRegisterForm) {
+			$this->sendResponseToView();
+			return;
+		}
+
+		if($this->userWantsToLogin || $this->cookiesExists) {
 			$this->login();
 		}
 
-		if($userWantsToLogout) {
+		if($this->userWantsToLogout) {
 			$this->logInSystem->logout();
 			ResponseMessage::logout();
 		}
 
 		// first time login
 		elseif(!isset($_SESSION['isLoggedIn']) && $this->logInSystem->login()) {
-			if($keep) {
+			if($this->keep) {
 				$this->logInSystem->keepLogIn($this->username);
 				ResponseMessage::keep();
 			}
@@ -90,7 +106,7 @@ class MasterController {
 				}
 			}
 			catch(\LoginByManipulatedCookiesException $e) {
-				ResponseMessage::LoginByManipulatedCookies();
+				ResponseMessage::loginByManipulatedCookies();
 			}
 		}
 		else { // cookies does not exists
@@ -112,13 +128,36 @@ class MasterController {
 		}
 	}
 
+	private function register() {
+		$username = $this->registerView->getRequestUserName();
+		$password = $this->registerView->getRequestPassword();
+		$passwordRepeat = $this->registerView->getRequestPasswordRepeat();
+
+		try {
+			$this->registerSystem->validateCredentials($username, $password, $passwordRepeat);
+		}
+		catch(\RegisterWithoutAnyInformationException $e) {
+			ResponseMessage::registerWithoutAnyInformation();
+		}
+		catch(\RegisterWithEmptyPasswordsException $e) {
+			ResponseMessage::registerWithEmptyPasswords();
+		}
+	}
+
 	private function sendResponseToView() {
-		$message = ResponseMessage::message();
-		$isLoggedIn = $this->logInSystem->isLoggedIn();
-		$logInView = $this->logInView;
 		$dateTimeView = $this->dateTimeView;
 
-		$this->logInView->setResponseMessage($message);
-		$this->layoutView->render($isLoggedIn, $logInView, $dateTimeView);
+		if($this->userWantsToShowRegisterForm) {
+			$this->registerView->setResponseMessage(ResponseMessage::message());
+			$registerView = $this->registerView;
+			$this->layoutView->renderRegisterForm($registerView, $dateTimeView);
+		}
+		else {
+			$this->logInView->setResponseMessage(ResponseMessage::message());
+			$isLoggedIn = $this->logInSystem->isLoggedIn();
+			$logInView = $this->logInView;
+
+			$this->layoutView->renderLoginForm($isLoggedIn, $logInView, $dateTimeView);
+		}
 	}
 }
