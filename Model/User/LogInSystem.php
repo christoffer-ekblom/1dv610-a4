@@ -70,6 +70,7 @@ class LoginSystem {
 	public function logIn() {
 		if($this->validLogin) {
 			$_SESSION['isLoggedIn'] = true;
+			$_SESSION['browser'] = $_SERVER['HTTP_USER_AGENT'];
 			return true;
 		}
 		return false;
@@ -82,7 +83,7 @@ class LoginSystem {
 	}
 
 	public function isLoggedIn() {
-		if(isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn'] == true) {
+		if(isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn'] == true && $_SESSION['browser'] == $_SERVER['HTTP_USER_AGENT']) {
 			return true;
 		}
 		return false;

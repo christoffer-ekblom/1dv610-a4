@@ -6,6 +6,7 @@ namespace Controller;
 require_once('Model/User/Credentials.php');
 require_once('Model/User/LogInSystem.php');
 require_once('Model/User/RegisterSystem.php');
+require_once('Model/DateTime.php');
 
 // Require View members
 require_once('View/ResponseMessage.php');
@@ -17,6 +18,7 @@ require_once('View/RegisterView.php');
 use Model\User\Credentials as Credentials;
 use Model\User\LogInSystem as LogInSystem;
 use Model\User\RegisterSystem as RegisterSystem;
+use Model\DateTime as DateTime;
 
 use View\ResponseMessage as ResponseMessage;
 use View\LayoutView as LayoutView;
@@ -50,7 +52,7 @@ class MasterController {
 
 		$this->layoutView = new LayoutView();
 		$this->logInView = new LoginView();
-		$this->dateTimeView = new DateTimeView();
+		$this->dateTimeView = new DateTimeView(DateTime::getTime());
 		$this->registerView = new RegisterView();
 
 		$this->username = $this->logInView->getRequestUserName();
