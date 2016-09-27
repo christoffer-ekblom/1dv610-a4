@@ -154,6 +154,9 @@ class MasterController {
 		catch(\RegisterWithAnExistingUserException $e) {
 			ResponseMessage::registerWithAnExistingUser();
 		}
+		catch(\RegisterWithNotAllowedCharactersException $e) {
+			ResponseMessage::registerWithNotAllowedCharacters();
+		}
 	}
 
 	private function sendResponseToView() {

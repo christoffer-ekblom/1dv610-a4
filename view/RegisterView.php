@@ -21,7 +21,7 @@ class RegisterView {
 				<legend>Register a new user - Write username and password</legend>
 					<p id='" . self::$messageId . "'>" . $this->message . "</p>
 					<label for='" . self::$username . "' >Username :</label>
-					<input type='text' size='20' name='" . self::$username . "' id='" . self::$username . "' value='" . filter_input(INPUT_POST, self::$username) . "' />
+					<input type='text' size='20' name='" . self::$username . "' id='" . self::$username . "' value='" . strip_tags(filter_input(INPUT_POST, self::$username)) . "' />
 					<br/>
 					<label for='" . self::$password . "' >Password  :</label>
 					<input type='password' size='20' name='" . self::$password . "' id='" . self::$password . "' value='' />

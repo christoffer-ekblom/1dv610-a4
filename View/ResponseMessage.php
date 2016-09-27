@@ -68,4 +68,8 @@ class ResponseMessage {
 	public static function registerWithAnExistingUser() {
 		self::$message = 'User exists, pick another username.';
 	}
+
+	public static function registerWithNotAllowedCharacters() {
+		self::$message = 'Username contains invalid characters.';
+	}
 }
