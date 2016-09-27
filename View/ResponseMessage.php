@@ -64,4 +64,8 @@ class ResponseMessage {
 	public static function registerWithADifferentPasswords() {
 		self::$message = 'Passwords do not match.';
 	}
+
+	public static function registerWithAnExistingUser() {
+		self::$message = 'User exists, pick another username.';
+	}
 }

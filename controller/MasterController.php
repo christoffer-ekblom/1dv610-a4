@@ -151,6 +151,9 @@ class MasterController {
 		catch(\RegisterWithADifferentPasswordsException $e) {
 			ResponseMessage::registerWithADifferentPasswords();
 		}
+		catch(\RegisterWithAnExistingUserException $e) {
+			ResponseMessage::registerWithAnExistingUser();
+		}
 	}
 
 	private function sendResponseToView() {

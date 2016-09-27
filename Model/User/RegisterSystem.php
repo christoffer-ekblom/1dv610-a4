@@ -9,6 +9,7 @@ require_once('Exceptions/RegisterWithEmptyPasswordsException.php');
 require_once('Exceptions/RegisterWithAShortUsernameException.php');
 require_once('Exceptions/RegisterWithAShortPasswordException.php');
 require_once('Exceptions/RegisterWithADifferentPasswordsException.php');
+require_once('Exceptions/RegisterWithAnExistingUserException.php');
 
 class RegisterSystem {
 	private $member;
@@ -26,6 +27,7 @@ class RegisterSystem {
 		$registerWithAShortUsername = strlen($username) < $usernameMinLength && strlen($password) >= $passwordMinLength && strlen($passwordRepeat) >= $passwordMinLength;
 		$registerWithAShortPassword = strlen($username) >= $usernameMinLength && strlen($password) < $passwordMinLength && strlen($passwordRepeat) < $passwordMinLength;
 		$registerWithADifferentPasswords = $password !== $passwordRepeat;
+		$memberAlreadyExists = $this->member->usernameExists($username);
 
 		if($registerWithoutAnyInformation) {
 			throw new \RegisterWithoutAnyInformationException();	
@@ -41,6 +43,9 @@ class RegisterSystem {
 		}
 		if($registerWithADifferentPasswords) {
 			throw new \RegisterWithADifferentPasswordsException();
+		}
+		if($memberAlreadyExists) {
+			throw new \RegisterWithAnExistingUserException();
 		}
 	}
 }

@@ -51,7 +51,7 @@ class MemberRegistry {
 
 	private function getAllUsernames() {
 		$getAllMembersQuery = 'SELECT username FROM members';
-		$result = mysqli_query($this->connection, $this->getAllMembersQuery);
+		$result = mysqli_query($this->connection, $getAllMembersQuery);
 		
 		while($row = $result->fetch_array()) {
 			$members[] = $row[0];
