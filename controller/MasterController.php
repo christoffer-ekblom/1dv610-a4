@@ -142,6 +142,9 @@ class MasterController {
 		catch(\RegisterWithEmptyPasswordsException $e) {
 			ResponseMessage::registerWithEmptyPasswords();
 		}
+		catch(\RegisterWithAShortUsernameException $e) {
+			ResponseMessage::registerWithAShortUsername();
+		}
 	}
 
 	private function sendResponseToView() {

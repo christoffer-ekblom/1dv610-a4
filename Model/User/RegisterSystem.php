@@ -18,14 +18,22 @@ class RegisterSystem {
 	}
 
 	public function validateCredentials($username, $password, $passwordRepeat) {
+		$usernameMinLength = 3;
+		$passwordMinLength = 6;
+
 		$registerWithoutAnyInformation = $username == '' && $password == null && $passwordRepeat == null;
 		$registerWithEmptyPasswords = $username != '' && $password == null && $passwordRepeat == null;
+		$registerWithAShortUsername = strlen($username) < $usernameMinLength && strlen($password) >= $passwordMinLength && strlen($passwordRepeat) >= $passwordMinLength;
 
 		if($registerWithoutAnyInformation) {
 			throw new \RegisterWithoutAnyInformationException();	
 		}
 		if($registerWithEmptyPasswords) {
 			throw new \RegisterWithEmptyPasswordsException();
+		}
+		if($registerWithAShortUsername) {
+			throw new \RegisterWithAShortUsernameException();
+			
 		}
 	}
 }
