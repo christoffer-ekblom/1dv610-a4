@@ -1,15 +1,17 @@
 <?php
 
-namespace view;
+namespace View;
 
 class DateTimeView {
-	private $timeString;
-
-	public function __construct($timeString) {
-		$this->timeString = $timeString;
+	private $time;
+	
+	public function __construct($time) {
+		$this->time = $time;
 	}
 
 	public function show() {
-		return '<p>' . $this->timeString . '</p>';
+		$format = "l, \\t\\h\\e jS \\o\\f F o, \\T\\h\\e \\t\\i\\m\\e \\i\\s H:i:s";
+		$time = gmdate($format, $this->time);
+		return '<p>' . $time . '</p>';
 	}
 }
