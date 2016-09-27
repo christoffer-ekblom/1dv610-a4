@@ -148,6 +148,9 @@ class MasterController {
 		catch(\RegisterWithAShortPasswordException $e) {
 			ResponseMessage::registerWithAShortPassword();
 		}
+		catch(\RegisterWithADifferentPasswordsException $e) {
+			ResponseMessage::registerWithADifferentPasswords();
+		}
 	}
 
 	private function sendResponseToView() {
