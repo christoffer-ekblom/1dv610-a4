@@ -24,6 +24,7 @@ class RegisterSystem {
 		$registerWithoutAnyInformation = $username == '' && $password == null && $passwordRepeat == null;
 		$registerWithEmptyPasswords = $username != '' && $password == null && $passwordRepeat == null;
 		$registerWithAShortUsername = strlen($username) < $usernameMinLength && strlen($password) >= $passwordMinLength && strlen($passwordRepeat) >= $passwordMinLength;
+		$registerWithAShortPassword = strlen($username) >= $usernameMinLength && strlen($password) < $passwordMinLength && strlen($passwordRepeat) < $passwordMinLength;
 
 		if($registerWithoutAnyInformation) {
 			throw new \RegisterWithoutAnyInformationException();	
@@ -33,6 +34,9 @@ class RegisterSystem {
 		}
 		if($registerWithAShortUsername) {
 			throw new \RegisterWithAShortUsernameException();
+		}
+		if($registerWithAShortPassword) {
+			throw new \RegisterWithAShortPasswordException();
 			
 		}
 	}

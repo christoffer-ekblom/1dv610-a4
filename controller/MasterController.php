@@ -145,6 +145,9 @@ class MasterController {
 		catch(\RegisterWithAShortUsernameException $e) {
 			ResponseMessage::registerWithAShortUsername();
 		}
+		catch(\RegisterWithAShortPasswordException $e) {
+			ResponseMessage::registerWithAShortPassword();
+		}
 	}
 
 	private function sendResponseToView() {

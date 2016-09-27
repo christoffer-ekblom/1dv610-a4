@@ -56,4 +56,8 @@ class ResponseMessage {
 	public static function registerWithAShortUsername() {
 		self::$message = 'Username has too few characters, at least 3 characters.';
 	}
+
+	public static function registerWithAShortPassword() {
+		self::$message = 'Password has too few characters, at least 6 characters.';
+	}
 }
