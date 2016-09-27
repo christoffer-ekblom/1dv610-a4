@@ -157,6 +157,14 @@ class MasterController {
 		catch(\RegisterWithNotAllowedCharactersException $e) {
 			ResponseMessage::registerWithNotAllowedCharacters();
 		}
+
+		if($this->registerSystem->canRegister()) {
+			$credentials = new Credentials($username, $password);
+			$this->registerSystem->register($credentials);
+			ResponseMessage::registeredNewUser();
+			$this->userWantsToShowRegisterForm = false;
+			$this->username = $credentials->getUsername();
+		}
 	}
 
 	private function sendResponseToView() {
@@ -172,7 +180,7 @@ class MasterController {
 			$isLoggedIn = $this->logInSystem->isLoggedIn();
 			$logInView = $this->logInView;
 
-			$this->layoutView->renderLoginForm($isLoggedIn, $logInView, $dateTimeView);
+			$this->layoutView->renderLoginForm($isLoggedIn, $logInView, $dateTimeView, $this->username);
 		}
 	}
 }

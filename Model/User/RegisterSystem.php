@@ -14,9 +14,15 @@ require_once('Exceptions/RegisterWithNotAllowedCharactersException.php');
 
 class RegisterSystem {
 	private $member;
+	private $canRegister;
 
 	public function __construct() {
 		$this->member = new MemberRegistry();
+		$this->canRegister = false;
+	}
+
+	public function register(Credentials $credentials) {
+		$this->member->registerUser($credentials);
 	}
 
 	public function validateCredentials($username, $password, $passwordRepeat) {
@@ -34,23 +40,30 @@ class RegisterSystem {
 		if($registerWithoutAnyInformation) {
 			throw new \RegisterWithoutAnyInformationException();	
 		}
-		if($registerWithEmptyPasswords) {
+		elseif($registerWithEmptyPasswords) {
 			throw new \RegisterWithEmptyPasswordsException();
 		}
-		if($registerWithAShortUsername) {
+		elseif($registerWithAShortUsername) {
 			throw new \RegisterWithAShortUsernameException();
 		}
-		if($registerWithAShortPassword) {
+		elseif($registerWithAShortPassword) {
 			throw new \RegisterWithAShortPasswordException();
 		}
-		if($registerWithADifferentPasswords) {
+		elseif($registerWithADifferentPasswords) {
 			throw new \RegisterWithADifferentPasswordsException();
 		}
-		if($memberAlreadyExists) {
+		elseif($memberAlreadyExists) {
 			throw new \RegisterWithAnExistingUserException();
 		}
-		if($registerWithNotAllowedCharacters) {
+		elseif($registerWithNotAllowedCharacters) {
 			throw new \RegisterWithNotAllowedCharactersException();
 		}
+		else {
+			$this->canRegister = true;
+		}
+	}
+
+	public function canRegister() {
+		return $this->canRegister;
 	}
 }

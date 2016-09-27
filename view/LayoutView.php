@@ -3,7 +3,7 @@
 namespace View;
 
 class LayoutView {
-  public function renderLoginForm($isLoggedIn, LoginView $v, DateTimeView $dtv) {
+  public function renderLoginForm($isLoggedIn, LoginView $v, DateTimeView $dtv, $username = null) {
     echo '<!DOCTYPE html>
     <html>
       <head>
@@ -15,7 +15,7 @@ class LayoutView {
         <a href="?register">Register a new user</a>
         ' . $this->renderIsLoggedIn($isLoggedIn) . '
         <div class="container">
-          ' . $v->response($isLoggedIn) . '
+          ' . $v->response($isLoggedIn, $username) . '
           ' . $dtv->show() . '
         </div>
       </body>

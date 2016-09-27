@@ -72,4 +72,8 @@ class ResponseMessage {
 	public static function registerWithNotAllowedCharacters() {
 		self::$message = 'Username contains invalid characters.';
 	}
+
+	public static function registeredNewUser() {
+		self::$message = 'Registered new user.';
+	}
 }

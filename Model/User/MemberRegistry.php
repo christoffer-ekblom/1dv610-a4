@@ -49,6 +49,14 @@ class MemberRegistry {
 		return false;
 	}
 
+	public function registerUser(Credentials $credentials) {
+		$username = $credentials->getUsername();
+		$password = $credentials->getPassword();
+		
+		$sql = "INSERT INTO `members` (`id`, `username`, `password`, `cookie`) VALUES (NULL, '$username', '$password', NULL);";
+		$this->connection->query($sql);
+	}
+
 	private function getAllUsernames() {
 		$getAllMembersQuery = 'SELECT username FROM members';
 		$result = mysqli_query($this->connection, $getAllMembersQuery);

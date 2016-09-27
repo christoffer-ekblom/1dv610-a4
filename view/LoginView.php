@@ -13,9 +13,9 @@ class LoginView {
 	private static $messageId = 'LoginView::Message';
 	private $message;
 
-	public function response($isLoggedIn) {
+	public function response($isLoggedIn, $username = null) {
 		if(!$isLoggedIn) {
-			$response = $this->generateLoginFormHTML();
+			$response = $this->generateLoginFormHTML($username);
 		}
 		else {
 			$response = $this->generateLogoutButtonHTML($this->message);
@@ -33,7 +33,11 @@ class LoginView {
 		';
 	}
 	
-	private function generateLoginFormHTML() {
+	private function generateLoginFormHTML($username = null) {
+		if($username == null) {
+			$username = filter_input(INPUT_POST, self::$name);
+		}
+
 		return '
 			<form method="post" > 
 				<fieldset>
@@ -41,7 +45,7 @@ class LoginView {
 					<p id="' . self::$messageId . '">' . $this->message . '</p>
 					
 					<label for="' . self::$name . '">Username :</label>
-					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . filter_input(INPUT_POST, self::$name) . '" />
+					<input type="text" id="' . self::$name . '" name="' . self::$name . '" value="' . $username . '" />
 
 					<label for="' . self::$password . '">Password :</label>
 					<input type="password" id="' . self::$password . '" name="' . self::$password . '" />
