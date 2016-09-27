@@ -40,4 +40,8 @@ class ResponseMessage {
 	public static function welcomeBackWithCookie() {
 		self::$message = 'Welcome back with cookie';
 	}
+
+	public static function LoginByManipulatedCookies() {
+		self::$message = 'Wrong information in cookies';
+	}
 }

@@ -9,6 +9,7 @@ require_once('Exceptions/LoginWithoutAnyEnteredFieldsException.php');
 require_once('Exceptions/LoginWithOnlyUsernameException.php');
 require_once('Exceptions/LoginWithOnlyPasswordException.php');
 require_once('Exceptions/WrongNameOrPasswordException.php');
+require_once('Exceptions/LoginByManipulatedCookies.php');
 
 class LoginSystem {
 	private $credentials;
@@ -52,11 +53,16 @@ class LoginSystem {
 	}
 
 	public function cookieLogin($username) {
-		if(isset($_COOKIE['LoginView::CookiePassword'])) {
-			$this->member->usernameCookieMatch($username, $_COOKIE['LoginView::CookiePassword']);
-			$this->validLogin = true;
-			$this->logIn();
-			return true;
+		$cookieExists = isset($_COOKIE['LoginView::CookiePassword']);
+		if($cookieExists) {
+			if($this->member->usernameCookieMatch($username, filter_input(INPUT_COOKIE, 'LoginView::CookiePassword'))) {
+				$this->validLogin = true;
+				$this->logIn();
+				return true;
+			}
+			else {
+				throw new \LoginByManipulatedCookies();
+			}
 		}
 		return false;
 	}

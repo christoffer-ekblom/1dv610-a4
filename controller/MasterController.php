@@ -25,7 +25,6 @@ use View\RegisterView as RegisterView;
 
 class MasterController {
 	private $logInSystem;
-	private $credentials;
 	private $cookiesExists;
 	
 	private $layoutView;
@@ -54,12 +53,8 @@ class MasterController {
 		$userWantsToLogout = $this->logInView->getRequestLogout() !== null && $this->logInSystem->isLoggedIn();
 		$keep = $this->logInView->getRequestKeepMeLoggedIn() !== null;
 
-		if($this->cookiesExists) {
-			$this->tryToLoginWithCookie();
-		}
-
-		elseif($userWantsToLogin) {
-			$this->tryToLogin();
+		if($userWantsToLogin || $this->cookiesExists) {
+			$this->login();
 		}
 
 		if($userWantsToLogout) {
@@ -81,34 +76,35 @@ class MasterController {
 		$this->sendResponseToView();
 	}
 
-	private function tryToLogin() {
+	private function login() {
 		$credentials = new Credentials($this->username, $this->password);
 
-		try {
-			$this->logInSystem->validateCredentials($credentials);
-		}
-		catch(\LoginWithoutAnyEnteredFieldsException $e) {
-			ResponseMessage::usernameIsMissing();
-		}
-		catch(\LoginWithOnlyUsernameException $e) {
-			ResponseMessage::passwordIsMissing();
-		}
-		catch(\LoginWithOnlyPasswordException $e) {
-			ResponseMessage::usernameIsMissing();
-		}
-		catch(\WrongNameOrPasswordException $e) {
-			ResponseMessage::wrongNameOrPassword();
-		}
-	}
-
-	private function tryToLoginWithCookie() {
-		try {
-			if(!isset($_SESSION['isLoggedIn']) && $this->logInSystem->cookieLogin($this->username)) {
-				ResponseMessage::welcomeBackWithCookie();
+		if($this->cookiesExists) {
+			try {
+				if(!isset($_SESSION['isLoggedIn']) && $this->logInSystem->cookieLogin($_COOKIE['LoginView::CookieName'])) {
+					ResponseMessage::welcomeBackWithCookie();
+				}
+			}
+			catch(\LoginByManipulatedCookies $e) {
+				ResponseMessage::LoginByManipulatedCookies();
 			}
 		}
-		catch(\Exception $e) {
-
+		else { // cookies does not exists
+			try {
+				$this->logInSystem->validateCredentials($credentials);
+			}
+			catch(\LoginWithoutAnyEnteredFieldsException $e) {
+				ResponseMessage::usernameIsMissing();
+			}
+			catch(\LoginWithOnlyUsernameException $e) {
+				ResponseMessage::passwordIsMissing();
+			}
+			catch(\LoginWithOnlyPasswordException $e) {
+				ResponseMessage::usernameIsMissing();
+			}
+			catch(\WrongNameOrPasswordException $e) {
+				ResponseMessage::wrongNameOrPassword();
+			}
 		}
 	}
 
