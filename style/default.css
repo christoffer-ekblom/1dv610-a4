@@ -1,3 +1,15 @@
+@keyframes animatedBackground {
+	0% {
+		background-position: 0 0;
+	}
+	50% {
+		background-position: 100% 0;
+	}
+	100% {
+		background-position: 0 0;
+	}
+}
+
 @keyframes move {
 	0% {
 		left: 0px;
@@ -10,18 +22,21 @@
 	}
 }
 
+html, input[type=submit] {
+	text-transform: lowercase;
+}
+
 body {
 	background-image: url("../graphics/bg.jpg");
 	background-repeat: no-repeat;
 	background-attachment: fixed;
 	background-position: center center;
-	-webkit-background-size: cover;
-	-moz-background-size: cover;
-	-o-background-size: cover;
-	background-size: cover;
+	-webkit-animation: animatedBackground 20s linear infinite;
+	-moz-animation: animatedBackground 20s linear infinite;
+	-o-animation: animatedBackground 20s linear infinite;
+	animation: animatedBackground 20s linear infinite;
     height: 100%;
 	font-family: Helvetica;
-	text-transform: lowercase;
 }
 
 h1 {
@@ -37,9 +52,23 @@ p, legend, label {
 	font-size: 0.5em;
 }
 
+p {
+	font-size: 1em;
+	color: #000;
+}
+
+p:last-child {
+	color: #fff;
+	font-size: 0.5em;
+}
+
+a::before { 
+    content: "\2192  ";
+}
+
 a {
 	color: #fff;
-	font-size: 0.7em;
+	font-size: 1em;
 	text-decoration: none;
 	position: relative;
 	animation: move 2s infinite;
@@ -71,7 +100,7 @@ input {
 	opacity: 0.5;
 }
 
-input:hover {
+input:hover, input:focus, input:active {
 	opacity: 1;
 	-webkit-transition: all 0.2s ease-in-out;
     -moz-transition: all 0.2s ease-in-out;
@@ -87,8 +116,12 @@ form:hover {
     transition: all 0.2s ease-in-out;
 }
 
-
 input[type=submit] {
 	width: 25%;
 	margin: 0 auto;
+}
+
+input[type=checkbox] {
+    width:15px;
+    height:15px;
 }
