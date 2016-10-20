@@ -18,7 +18,6 @@ class RegisterSystem {
 
 	public function __construct() {
 		$this->member = new MemberRegistry();
-		$this->canRegister = false;
 	}
 
 	public function register(Credentials $credentials) {
@@ -26,6 +25,7 @@ class RegisterSystem {
 	}
 
 	public function validateCredentials($username, $password, $passwordRepeat) {
+		$this->canRegister = false;
 		$usernameMinLength = 3;
 		$passwordMinLength = 6;
 
