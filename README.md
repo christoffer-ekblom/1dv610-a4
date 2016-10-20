@@ -4,7 +4,7 @@ Interface repository for 1DV610 assignment 2 and 4
 ## Install instructions
 ### Database
 
-1. Create a PHP-file, mysqlCredentials.php in the root dir:
+1) Create a PHP-file, mysqlCredentials.php in the root dir:
 ```sh
 <?php
 
@@ -20,7 +20,7 @@ function getCredentials() {
 }
 ```
 
-2. Create database table
+2) Create database table
 
 ```sh
 CREATE TABLE IF NOT EXISTS `members` (
