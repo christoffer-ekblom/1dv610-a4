@@ -1,7 +1,40 @@
-# Login_1DV610
+# Login_1DV610 - Christoffer Ekblom
 Interface repository for 1DV610 assignment 2 and 4
 
-Christoffer Ekblom
+## Install instructions
+### Database
+
+1. Create a PHP-file, mysqlCredentials.php in the root dir:
+```sh
+<?php
+
+namespace Model;
+
+function getCredentials() {
+    return array(
+        'host' => 'your_host',
+        'username' => 'your_username',
+        'password' => 'your_password',
+        'db' => 'Login'
+    );
+}
+```
+
+2. Create database table
+
+```sh
+CREATE TABLE IF NOT EXISTS `members` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `username` varchar(32) NOT NULL,
+  `password` varchar(32) NOT NULL,
+  `cookie` varchar(64) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `username` (`username`)
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=16 ;
+
+INSERT INTO `members` (`id`, `username`, `password`, `cookie`) VALUES
+(1, 'Admin', 'Password', NULL);
+```
 
 ### Project links
 - Requirements https://github.com/dntoll/1dv610/blob/master/assignments/2.requirements.md
