@@ -3,6 +3,7 @@
 namespace View;
 
 class LoginView {
+
 	private static $login = 'LoginView::Login';
 	private static $logout = 'LoginView::Logout';
 	private static $name = 'LoginView::UserName';
@@ -12,6 +13,7 @@ class LoginView {
 	private static $keep = 'LoginView::KeepMeLoggedIn';
 	private static $messageId = 'LoginView::Message';
 	private $message;
+
 	public function response($isLoggedIn, $username = null) {
 		if(!$isLoggedIn) {
 			$response = $this->generateLoginFormHTML($username);
@@ -21,6 +23,7 @@ class LoginView {
 		}
 		return $response;
 	}
+
 	private function generateLogoutButtonHTML($message) {
 		return '
 			<form  method="post" >
@@ -52,27 +55,35 @@ class LoginView {
 			</form>
 		';
 	}
+
 	public function getRequestLogin() {
 		return filter_input(INPUT_POST, self::$login);
 	}
+
 	public function getRequestLogout() {
 		return filter_input(INPUT_POST, self::$logout);
 	}
+
 	public function getRequestUserName() {
 		return filter_input(INPUT_POST, self::$name);
 	}
+
 	public function getRequestPassword() {
 		return filter_input(INPUT_POST, self::$password);
 	}
+
 	public function getRequestCookieName() {
 		return filter_input(INPUT_COOKIE, self::$cookieName);
 	}
+
 	public function getRequestCookiePassword() {
 		return filter_input(INPUT_COOKIE, self::$cookiePassword);
 	}
+
 	public function getRequestKeepMeLoggedIn() {
 		return filter_input(INPUT_POST, self::$keep);
 	}
+	
 	public function setResponseMessage($message) {
 		$this->message = $message;
 	}

@@ -1,16 +1,20 @@
 <?php
+
 namespace Controller;
+
 // Require Model members
 require_once('Model/User/Credentials.php');
 require_once('Model/User/LogInSystem.php');
 require_once('Model/User/RegisterSystem.php');
 require_once('Model/DateTime.php');
+
 // Require View members
 require_once('View/ResponseMessage.php');
 require_once('View/LayoutView.php');
 require_once('View/LoginView.php');
 require_once('View/DateTimeView.php');
 require_once('View/RegisterView.php');
+
 use Model\User\Credentials as Credentials;
 use Model\User\LogInSystem as LogInSystem;
 use Model\User\RegisterSystem as RegisterSystem;
@@ -20,6 +24,7 @@ use View\LayoutView as LayoutView;
 use View\LoginView as LoginView;
 use View\DateTimeView as DateTimeView;
 use View\RegisterView as RegisterView;
+
 class MasterController {
 	private $logInSystem;
 	private $cookiesExists;
@@ -36,6 +41,7 @@ class MasterController {
 	private $keep;
 	private $userWantsToRegister;
 	private $userWantsToShowRegisterForm;
+
 	public function __construct() {
 		$this->logInSystem = new LogInSystem();
 		$this->cookiesExists = isset($_COOKIE['LoginView::CookieName']) && isset($_COOKIE['LoginView::CookiePassword']);
@@ -47,6 +53,7 @@ class MasterController {
 		$this->username = $this->logInView->getRequestUserName();
 		$this->password = $this->logInView->getRequestPassword();
 	}
+
 	public function run() {
 		$this->userWantsToLogin = $this->logInView->getRequestLogin() !== null;
 		$this->userWantsToLogout = $this->logInView->getRequestLogout() !== null && $this->logInSystem->isLoggedIn();
@@ -79,6 +86,7 @@ class MasterController {
 		}
 		$this->sendResponseToView();
 	}
+
 	private function login() {
 		$credentials = new Credentials($this->username, $this->password);
 		if($this->cookiesExists) {
@@ -109,6 +117,7 @@ class MasterController {
 			}
 		}
 	}
+
 	private function register() {
 		$username = $this->registerView->getRequestUserName();
 		$password = $this->registerView->getRequestPassword();
@@ -145,6 +154,7 @@ class MasterController {
 			$this->username = $credentials->getUsername();
 		}
 	}
+	
 	private function sendResponseToView() {
 		$dateTimeView = $this->dateTimeView;
 		if($this->userWantsToShowRegisterForm) {
